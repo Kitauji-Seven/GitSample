@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>週間スケジュール管理</title>
+    <link rel="stylesheet" href="schedules_app.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="header-content">
+                <h1>{{ formattedDisplayDate }}</h1>
+                <div class="date-picker-wrapper">
+                    <label for="date-input" class="calendar-icon">📅</label>
+                    <input type="date" id="date-input" v-model="selectedDate" @change="updateWeek">
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="table-container">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>日/時</th>
+                            <th v-for="hour in hours" :key="hour">
+                                {{ hour }}:00
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="day in weekDays" :key="day.date">
+                            <td class="date-col">
+                                {{ day.label }}<br>({{ day.formattedDate }})
+                            </td>
+                            <td v-for="hour in hours" :key="hour" class="select-cell">
+                                <select 
+                                    v-model="scheduleData[`${day.date}-${hour}`]" 
+                                    @change="saveSchedule"
+                                    :class="getStatusClass(scheduleData[`${day.date}-${hour}`])"
+                                >
+                                    <option value="">--</option>
+                                    <option v-for="opt in options" :key="opt" :value="opt">{{ opt }}</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <script src="schedules_app.js"></script>
+</body>
+</html>
